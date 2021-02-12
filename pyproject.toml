@@ -9,6 +9,11 @@ authors = ["Elijah Wilson <dev.tizz98@gmail.com>"]
 packages = [
     { include = "clerk" },
 ]
+include = [
+    "LICENSE",
+]
+license = "MIT"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
