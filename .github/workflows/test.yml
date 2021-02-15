@@ -43,6 +43,6 @@ jobs:
         poetry run tox -e black-check
     - name: Run tests
       env:
-        TOX_ENV: py${{ matrix.python-version}}
+        TOX_ENV: py${{ matrix.python-version }}
       run: |
         poetry run tox -e $TOX_ENV
