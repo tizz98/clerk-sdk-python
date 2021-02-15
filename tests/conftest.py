@@ -90,3 +90,23 @@ def users_data(faker, num_users):
         users.append(types.User.parse_obj(data))
 
     return json_data, users
+
+
+@pytest.fixture
+def clients_data(num_clients):
+    json_data = []
+    clients = []
+
+    for _ in range(num_clients):
+        data = {
+            "object": "client",
+            "id": f"client_{uuid.uuid4().hex}",
+            "last_active_session_id": f"sess_{uuid.uuid4().hex}",
+            "sign_in_attempt_id": None,
+            "sign_up_attempt_id": None,
+            "ended": False,
+        }
+        json_data.append(data)
+        clients.append(types.Client.parse_obj(data))
+
+    return json_data, clients

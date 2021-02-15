@@ -72,3 +72,29 @@ class TestAPIErrorHandling:
             await client.users.update("123", types.UpdateUserRequest())
 
         self._check_error(e.value, server_400_error)
+
+    async def test_clients_service_handles_errors(self, client, httpserver, server_400_error):
+        httpserver.expect_request("/clients/", "GET").respond_with_json(
+            {"errors": [server_400_error.dict()]}, status=400
+        )
+        httpserver.expect_request("/clients/123/", "GET").respond_with_json(
+            {"errors": [server_400_error.dict()]}, status=400
+        )
+        httpserver.expect_request("/clients/verify/", "POST").respond_with_json(
+            {"errors": [server_400_error.dict()]}, status=400
+        )
+
+        with pytest.raises(errors.ClerkAPIException) as e:
+            await client.clients.list()
+
+        self._check_error(e.value, server_400_error)
+
+        with pytest.raises(errors.ClerkAPIException) as e:
+            await client.clients.get("123")
+
+        self._check_error(e.value, server_400_error)
+
+        with pytest.raises(errors.ClerkAPIException) as e:
+            await client.clients.verify("token")
+
+        self._check_error(e.value, server_400_error)
