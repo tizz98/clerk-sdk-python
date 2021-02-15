@@ -4,12 +4,14 @@ from typing import Any, Mapping, Optional
 
 import aiohttp
 
-__all__ = ["Client", "Service"]
-
 from clerk.errors import ClerkAPIException
+
+__all__ = ["Client", "Service"]
 
 
 class Client:
+    """An API client for the clerk.dev API"""
+
     def __init__(
         self, token: str, base_url: str = "https://api.clerk.dev/v1/", timeout_seconds: float = 30.0
     ) -> None:
