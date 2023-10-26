@@ -51,6 +51,12 @@ class Client:
 
         return UsersService(self)
 
+    @property
+    def organizations(self):
+        from clerk.organizations import OrganizationsService
+
+        return OrganizationsService(self)
+
     @asynccontextmanager
     async def get(
         self, endpoint: str, params: Optional[Mapping[str, str]] = None
