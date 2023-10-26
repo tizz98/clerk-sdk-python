@@ -16,7 +16,7 @@ class Client:
         self, token: str, base_url: str = "https://api.clerk.dev/v1/", timeout_seconds: float = 30.0
     ) -> None:
         self._session = aiohttp.ClientSession(
-            headers={"Authorization": f"Bearer {token}"},
+            headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
             timeout=aiohttp.ClientTimeout(total=timeout_seconds),
         )
         self._base_url = base_url
