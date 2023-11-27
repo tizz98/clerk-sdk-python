@@ -9,9 +9,9 @@ class OrganizationsService(Service):
 
     async def list(self) -> List[types.Organization]:
         """Retrieve a list of all organizations"""
-        async with self._client.get(self.endpoint) as r:
-            s = await r.json()
-            return [types.Organization.parse_obj(s) for s in s.get("data")]
+        async with self._client.get(self.endpoint) as resp:
+            resp_json = await r.json()
+            return [types.Organization.parse_obj(obj) for obj in s.get("data", [])]
 
     async def get(self, organization_id: str) -> types.Organization:
         """Retrieve an organization by their id"""
