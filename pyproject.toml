@@ -17,7 +17,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-aiohttp = "3.9.0"
+aiohttp = {extras = ["speedups"], version = "^3.9.0"}
 pydantic = "^1.10.13"
 
 [tool.poetry.dev-dependencies]
