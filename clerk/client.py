@@ -1,8 +1,8 @@
-import http
 from contextlib import asynccontextmanager
-from typing import Any, Mapping, Optional
-
+from typing import Any, AsyncIterator, Mapping
+import http
 import aiohttp
+from pydantic import BaseModel
 
 from clerk.errors import ClerkAPIException
 
@@ -59,31 +59,37 @@ class Client:
 
     @asynccontextmanager
     async def get(
-        self, endpoint: str, params: Optional[Mapping[str, str]] = None
-    ) -> aiohttp.ClientResponse:
+        self, endpoint: str, params: Mapping[str, str] | None = None
+    ) -> AsyncIterator[aiohttp.ClientResponse]:
         async with self._session.get(self._make_url(endpoint), params=params) as r:
             await self._check_response_err(r)
             yield r
 
     @asynccontextmanager
     async def post(
-        self, endpoint: str, data: Any = None, json: Any = None
-    ) -> aiohttp.ClientResponse:
-        async with self._session.post(self._make_url(endpoint), data=data, json=json) as r:
+        self, endpoint: str, request: BaseModel | None = None, json: Any = None
+    ) -> AsyncIterator[aiohttp.ClientResponse]:
+        async with self._session.post(
+            self._make_url(endpoint),
+            data=request and request.model_dump_json(),
+            json=json,
+        ) as r:
             await self._check_response_err(r)
             yield r
 
     @asynccontextmanager
-    async def delete(self, endpoint: str) -> aiohttp.ClientResponse:
+    async def delete(self, endpoint: str) -> AsyncIterator[aiohttp.ClientResponse]:
         async with self._session.delete(self._make_url(endpoint)) as r:
             await self._check_response_err(r)
             yield r
 
     @asynccontextmanager
     async def patch(
-        self, endpoint: str, data: Any = None, json: Any = None
-    ) -> aiohttp.ClientResponse:
-        async with self._session.patch(self._make_url(endpoint), data=data, json=json) as r:
+        self, endpoint: str, request: BaseModel | None = None, json: Any = None
+    ) -> AsyncIterator[aiohttp.ClientResponse]:
+        async with self._session.patch(
+            self._make_url(endpoint), data=request and request.model_dump_json(), json=json
+        ) as r:
             await self._check_response_err(r)
             yield r
 

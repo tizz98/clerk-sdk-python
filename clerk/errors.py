@@ -21,7 +21,7 @@ class ClerkAPIException(Exception):
             api_errors = []
         else:
             errors = data.get("errors", [])
-            api_errors = [types.Error.parse_obj(e) for e in errors]
+            api_errors = [types.Error.model_validate(e) for e in errors]
 
         return ClerkAPIException(resp.status, resp.method, str(resp.url), *api_errors)
 

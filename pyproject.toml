@@ -1,35 +1,35 @@
 [tool.poetry]
 name = "clerk-sdk-python"
-version = "0.1.0"
+version = "0.2.0"
 description = "Python SDK for clerk.dev"
-repository = "https://github.com/tizz98/clerk-sdk-python"
+repository = "https://github.com/CyrusOfEden/clerk-sdk-python"
 homepage = "https://clerk.dev"
 keywords = ["clerk", "authentication", "clerk.dev"]
-authors = ["Elijah Wilson <dev.tizz98@gmail.com>"]
-packages = [
-    { include = "clerk" },
+authors = [
+  "Elijah Wilson <dev.tizz98@gmail.com>",
+  "Cyrus Nouroozi <cyrus@edendaolab.com>"
 ]
-include = [
-    "LICENSE",
-]
+packages = [{ include = "clerk" }]
+include = ["LICENSE"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-aiohttp = {extras = ["speedups"], version = "^3.9.0"}
-pydantic = "^1.10.13"
+aiohttp = { extras = ["speedups"], version = "^3.9.0" }
+pydantic = "^2.5"
 
-[tool.poetry.dev-dependencies]
-pytest = "^5.4.3"
-black = "^20.8b1"
-tox = "^3.28.0"
+[tool.poetry.group.dev.dependencies]
+black = "^20"
+Faker = "^21"
 isort = "^5.12.0"
-pytest-httpserver = "^0.3.8"
-pytest-asyncio = "^0.14.0"
+pluggy = "^1.0"
+pytest = "^7.4.3"
+pytest-asyncio = "^0.23.2"
+pytest-cov = "^4.1"
+pytest-httpserver = "^1.0"
 pytest-spec = "^3.2.0"
-pytest-cov = "^2.12.1"
-Faker = "^6.6.3"
+tox = "^3.28.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -46,7 +46,7 @@ profile = "black"
 
 [tool.black]
 line-length = 100
-target-version = ['py38']  # todo py39
+target-version = ['py312']
 include = '\.pyi?$'
 exclude = '''
 
