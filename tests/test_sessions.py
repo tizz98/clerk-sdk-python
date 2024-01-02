@@ -1,18 +1,18 @@
 import pytest
 
 
-@pytest.mark.asyncio
 class TestList:
     @pytest.mark.parametrize("num_sessions", [0, 1, 2])
+    @pytest.mark.asyncio
     async def test_valid_data_is_parsed_properly(self, client, httpserver, session_data):
         httpserver.expect_request("/sessions/", "GET").respond_with_json(session_data[0])
         sessions = await client.session.list()
         assert sessions == session_data[1]
 
 
-@pytest.mark.asyncio
 class TestGet:
     @pytest.mark.parametrize("num_sessions", [1])
+    @pytest.mark.asyncio
     async def test_valid_data_is_parsed_properly(self, client, httpserver, session_data):
         expected_session = session_data[1][0]
         session_json = session_data[0][0]
@@ -24,9 +24,9 @@ class TestGet:
         assert session == expected_session
 
 
-@pytest.mark.asyncio
 class TestRevoke:
     @pytest.mark.parametrize("num_sessions", [1])
+    @pytest.mark.asyncio
     async def test_valid_request_returns_revoked_session(self, client, httpserver, session_data):
         expected_session = session_data[1][0]
         session_json = session_data[0][0]
@@ -38,9 +38,9 @@ class TestRevoke:
         assert session == expected_session
 
 
-@pytest.mark.asyncio
 class TestVerify:
     @pytest.mark.parametrize("num_sessions", [1])
+    @pytest.mark.asyncio
     async def test_valid_request_returns_verified_session(self, client, httpserver, session_data):
         expected_session = session_data[1][0]
         session_json = session_data[0][0]

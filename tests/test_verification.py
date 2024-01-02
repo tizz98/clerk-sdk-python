@@ -3,9 +3,9 @@ import pytest
 from clerk import errors
 
 
-@pytest.mark.asyncio
 class TestVerify:
     @pytest.mark.parametrize("num_sessions", [1])
+    @pytest.mark.asyncio
     async def test_verify_with_session_id(self, client, httpserver, session_data):
         expected_session = session_data[1][0]
         session_json = session_data[0][0]
@@ -18,6 +18,7 @@ class TestVerify:
 
     @pytest.mark.parametrize("num_sessions", [1])
     @pytest.mark.parametrize("num_clients", [1])
+    @pytest.mark.asyncio
     async def test_verify_without_session_id_and_active_session(
         self, client, httpserver, session_data, clients_data
     ):
@@ -38,6 +39,7 @@ class TestVerify:
         assert session == expected_session
 
     @pytest.mark.parametrize("num_clients", [1])
+    @pytest.mark.asyncio
     async def test_verify_without_session_id_and_no_active_session(
         self, client, httpserver, clients_data
     ):

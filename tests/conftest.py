@@ -2,14 +2,14 @@ import uuid
 from datetime import datetime, timedelta
 
 import pytest
+import pytest_asyncio
 
 from clerk import Client, types
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def client(httpserver):
-    async with Client("foo", httpserver.url_for("")) as c:
-        yield c
+    return Client("foo", httpserver.url_for(""))
 
 
 @pytest.fixture
@@ -40,7 +40,7 @@ def session_data(num_sessions):
             "abandon_at": int((now + timedelta(days=14)).timestamp()),
         }
         json_data.append(data)
-        sessions.append(types.Session.parse_obj(data))
+        sessions.append(types.Session.model_validate(data))
 
     return json_data, sessions
 
@@ -87,7 +87,7 @@ def users_data(faker, num_users):
             "private_metadata": {},
         }
         json_data.append(data)
-        users.append(types.User.parse_obj(data))
+        users.append(types.User.model_validate(data))
 
     return json_data, users
 
@@ -107,6 +107,6 @@ def clients_data(num_clients):
             "ended": False,
         }
         json_data.append(data)
-        clients.append(types.Client.parse_obj(data))
+        clients.append(types.Client.model_validate(data))
 
     return json_data, clients
