@@ -113,6 +113,7 @@ class Organization(BaseModel):
     public_metadata: dict
     private_metadata: dict
     created_by: str | None = None
+    image_url: str | None = None
 
 
 class DeleteOrganizationResponse(DeleteResponse):

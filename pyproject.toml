@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clerk-sdk-python"
-version = "0.3.0"
+version = "0.3.1"
 description = "Python SDK for clerk.dev"
 repository = "https://github.com/CyrusOfEden/clerk-sdk-python"
 homepage = "https://clerk.dev"
