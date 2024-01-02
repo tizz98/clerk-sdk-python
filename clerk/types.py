@@ -10,6 +10,7 @@ class Session(BaseModel):
     user_id: str
     status: str
     last_active_at: int
+    last_active_organization_id: str
     expire_at: int
     abandon_at: int
 
@@ -123,3 +124,16 @@ class UpdateOrganizationRequest(BaseModel):
     slug: str | None = None
     max_allowed_memberships: int | None = None
     admin_delete_enabled: bool | None = None
+
+
+class OrganizationMembership(BaseModel):
+    id: str
+    object: str
+    role: str
+    permissions: List[str]
+    public_metadata: dict
+    private_metadata: dict
+    organization: Organization
+    public_user_data: Any
+    created_at: int
+    updated_at: int

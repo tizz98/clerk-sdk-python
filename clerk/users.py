@@ -29,3 +29,8 @@ class UsersService(Service):
             json=request.model_dump_json(exclude_unset=True),
         )
         return types.User.model_validate_json(r.content)
+
+    async def memberships(self, user_id: str) -> List[types.Membership]:
+        """Retrieve a list of all memberships for a user"""
+        r = await self._client.get(f"{self.endpoint}/{user_id}/memberships")
+        return [types.OrganizationMembership.model_validate(s) for s in r.json()["data"]]

@@ -21,10 +21,3 @@ class SessionsService(Service):
         """Revoke a session by its id"""
         r = await self._client.post(f"{self.endpoint}/{session_id}/revoke")
         return types.Session.model_validate_json(r.content)
-
-    async def verify(self, session_id: str, token: str) -> types.Session:
-        """Verify a session by its id and a given token"""
-        request = types.VerifyRequest(token=token)
-
-        r = await self._client.post(f"{self.endpoint}/{session_id}/verify", request=request)
-        return types.Session.model_validate_json(r.content)
