@@ -1,4 +1,4 @@
-import aiohttp
+import httpx
 
 from clerk import types
 
@@ -6,24 +6,24 @@ __all__ = ["ClerkAPIException", "NoActiveSessionException"]
 
 
 class ClerkAPIException(Exception):
-    def __init__(self, status: int, method: str, url: str, *api_errors: types.Error) -> None:
-        self.status = status
-        self.method = method
+    def __init__(self, status: int, data: str, url: str, *api_errors: types.Error) -> None:
+        self.status_code = status
+        self.data = data
         self.url = url
         self.api_errors = api_errors
-        super().__init__(f"{self.method} {self.url}: {self.status} {self.api_errors!r}")
+        super().__init__(f"{self.url}: {self.status_code} {self.api_errors!r}")
 
     @classmethod
-    async def from_response(cls, resp: aiohttp.ClientResponse) -> "ClerkAPIException":
+    async def from_response(cls, resp: httpx.Response) -> "ClerkAPIException":
         try:
-            data = await resp.json()
+            data = resp.json()
         except:  # noqa
             api_errors = []
         else:
             errors = data.get("errors", [])
             api_errors = [types.Error.model_validate(e) for e in errors]
 
-        return ClerkAPIException(resp.status, resp.method, str(resp.url), *api_errors)
+        return ClerkAPIException(resp.status_code, resp.content, str(resp.url), *api_errors)
 
 
 class NoActiveSessionException(Exception):

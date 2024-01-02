@@ -5,8 +5,8 @@ from clerk import errors, types
 
 class TestAPIErrorHandling:
     def _check_error(self, e: errors.ClerkAPIException, err):
-        assert e.status == 400
-        assert e.method is not None
+        assert e.status_code == 400
+        assert e.data is not None
         assert e.url is not None
         assert e.api_errors == (err,)
 

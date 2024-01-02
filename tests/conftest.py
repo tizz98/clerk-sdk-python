@@ -9,8 +9,7 @@ from clerk import Client, types
 
 @pytest_asyncio.fixture
 async def client(httpserver):
-    async with Client("foo", httpserver.url_for("")) as c:
-        yield c
+    return Client("foo", httpserver.url_for(""))
 
 
 @pytest.fixture

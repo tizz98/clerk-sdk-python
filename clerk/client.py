@@ -1,8 +1,8 @@
-from contextlib import asynccontextmanager
-from typing import Any, AsyncIterator, Mapping
+from typing import Any, Mapping
 import http
-import aiohttp
+
 from pydantic import BaseModel
+import httpx
 
 from clerk.errors import ClerkAPIException
 
@@ -15,17 +15,11 @@ class Client:
     def __init__(
         self, token: str, base_url: str = "https://api.clerk.dev/v1/", timeout_seconds: float = 30.0
     ) -> None:
-        self._session = aiohttp.ClientSession(
+        self._session = httpx.AsyncClient(
             headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
-            timeout=aiohttp.ClientTimeout(total=timeout_seconds),
+            timeout=httpx.Timeout(timeout_seconds),
         )
         self._base_url = base_url
-
-    async def __aenter__(self):
-        return self
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        await self._session.close()
 
     @property
     def verification(self):
@@ -57,46 +51,39 @@ class Client:
 
         return OrganizationsService(self)
 
-    @asynccontextmanager
-    async def get(
-        self, endpoint: str, params: Mapping[str, str] | None = None
-    ) -> AsyncIterator[aiohttp.ClientResponse]:
-        async with self._session.get(self._make_url(endpoint), params=params) as r:
-            await self._check_response_err(r)
-            yield r
+    async def get(self, endpoint: str, params: Mapping[str, str] | None = None) -> httpx.Response:
+        r = await self._session.get(self._make_url(endpoint), params=params)
+        await self._check_response_err(r)
+        return r
 
-    @asynccontextmanager
     async def post(
         self, endpoint: str, request: BaseModel | None = None, json: Any = None
-    ) -> AsyncIterator[aiohttp.ClientResponse]:
-        async with self._session.post(
+    ) -> httpx.Response:
+        r = await self._session.post(
             self._make_url(endpoint),
-            data=request and request.model_dump_json(),
+            data=request.model_dump_json() if request else None,
             json=json,
-        ) as r:
-            await self._check_response_err(r)
-            yield r
+        )
+        await self._check_response_err(r)
+        return r
 
-    @asynccontextmanager
-    async def delete(self, endpoint: str) -> AsyncIterator[aiohttp.ClientResponse]:
-        async with self._session.delete(self._make_url(endpoint)) as r:
-            await self._check_response_err(r)
-            yield r
+    async def delete(self, endpoint: str) -> httpx.Response:
+        r = await self._session.delete(self._make_url(endpoint))
+        await self._check_response_err(r)
+        return r
 
-    @asynccontextmanager
     async def patch(
         self, endpoint: str, request: BaseModel | None = None, json: Any = None
-    ) -> AsyncIterator[aiohttp.ClientResponse]:
-        async with self._session.patch(
+    ) -> httpx.Response:
+        r = await self._session.patch(
             self._make_url(endpoint), data=request and request.model_dump_json(), json=json
-        ) as r:
-            await self._check_response_err(r)
-            yield r
+        )
+        await self._check_response_err(r)
+        return r
 
-    async def _check_response_err(self, r: aiohttp.ClientResponse):
-        if http.HTTPStatus.OK <= r.status < http.HTTPStatus.BAD_REQUEST:
-            return  # no error
-        raise await ClerkAPIException.from_response(r)
+    async def _check_response_err(self, r: httpx.Response):
+        if not http.HTTPStatus.OK <= r.status_code < http.HTTPStatus.BAD_REQUEST:
+            raise await ClerkAPIException.from_response(r)
 
     def _make_url(self, endpoint: str) -> str:
         return f"{self._base_url.rstrip('/')}/{endpoint.strip('/')}/"

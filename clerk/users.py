@@ -9,22 +9,23 @@ class UsersService(Service):
 
     async def list(self) -> List[types.User]:
         """Retrieve a list of all users"""
-        async with self._client.get(self.endpoint) as r:
-            return [types.User.model_validate(s) for s in await r.json()]
+        r = await self._client.get(self.endpoint)
+        return [types.User.model_validate(s) for s in r.json()["data"]]
 
     async def get(self, user_id: str) -> types.User:
         """Retrieve a user by their id"""
-        async with self._client.get(f"{self.endpoint}/{user_id}") as r:
-            return types.User.model_validate(await r.json())
+        r = await self._client.get(f"{self.endpoint}/{user_id}")
+        return types.User.model_validate_json(r.content)
 
     async def delete(self, user_id: str) -> types.DeleteUserResponse:
         """Delete a user by their id"""
-        async with self._client.delete(f"{self.endpoint}/{user_id}") as r:
-            return types.DeleteUserResponse.model_validate(await r.json())
+        r = await self._client.delete(f"{self.endpoint}/{user_id}")
+        return types.DeleteUserResponse.model_validate_json(r.content)
 
     async def update(self, user_id: str, request: types.UpdateUserRequest) -> types.User:
         """Update a user by their id"""
-        async with self._client.patch(
-            f"{self.endpoint}/{user_id}", json=request.model_dump_json(exclude_unset=True)
-        ) as r:
-            return types.User.model_validate(await r.json())
+        r = await self._client.patch(
+            f"{self.endpoint}/{user_id}",
+            json=request.model_dump_json(exclude_unset=True),
+        )
+        return types.User.model_validate_json(r.content)
