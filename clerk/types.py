@@ -67,10 +67,12 @@ class User(BaseModel):
     email_addresses: List[EmailAddress]
     phone_numbers: List[PhoneNumber]
     external_accounts: List[Any]
-    metadata: Any
+    public_metadata: Any
     private_metadata: Any
     created_at: int
     updated_at: int
+    last_sign_in_at: int
+    last_active_at: int
 
 
 class Error(BaseModel):
