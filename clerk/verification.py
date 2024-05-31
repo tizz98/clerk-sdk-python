@@ -1,11 +1,11 @@
-from typing import Optional
-
-from clerk import errors, types
-from clerk.client import Service
+from . import errors, types
+from .client import Service
 
 
 class VerificationService(Service):
-    async def verify(self, session_token: str, session_id: Optional[str] = None) -> types.Session:
+    async def verify(
+        self, session_token: str, session_id: str | None = None
+    ) -> types.Session:
         """Verify a session token and return the associated session, if any.
 
         If a session_id is not passed then the client's last active session is returned.

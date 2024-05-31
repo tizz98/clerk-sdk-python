@@ -1,12 +1,14 @@
 import aiohttp
 
-from clerk import types
+from . import types
 
 __all__ = ["ClerkAPIException", "NoActiveSessionException"]
 
 
 class ClerkAPIException(Exception):
-    def __init__(self, status: int, method: str, url: str, *api_errors: types.Error) -> None:
+    def __init__(
+        self, status: int, method: str, url: str, *api_errors: types.Error
+    ) -> None:
         self.status = status
         self.method = method
         self.url = url
@@ -21,7 +23,7 @@ class ClerkAPIException(Exception):
             api_errors = []
         else:
             errors = data.get("errors", [])
-            api_errors = [types.Error.parse_obj(e) for e in errors]
+            api_errors = [types.Error.model_validate(e) for e in errors]
 
         return ClerkAPIException(resp.status, resp.method, str(resp.url), *api_errors)
 

@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        image: clerk-python-sdk
+        stdin_open: true
+        tty: true
+        volumes: &backend_volumes
+            - .:/app:cached

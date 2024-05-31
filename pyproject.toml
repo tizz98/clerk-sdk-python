@@ -6,30 +6,29 @@ repository = "https://github.com/tizz98/clerk-sdk-python"
 homepage = "https://clerk.dev"
 keywords = ["clerk", "authentication", "clerk.dev"]
 authors = ["Elijah Wilson <dev.tizz98@gmail.com>"]
-packages = [
-    { include = "clerk" },
-]
-include = [
-    "LICENSE",
-]
+packages = [{ include = "clerk" }]
+include = ["LICENSE"]
 license = "MIT"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
-aiohttp = {extras = ["speedups"], version = "^3.7.3"}
-pydantic = "^1.7.3"
+python = "^3.11"
+aiohttp = { extras = ["speedups"], version = "^3.9.3" }
+pydantic = "^2.6.4"
+pytest-asyncio = "^0.23.6"
 
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
-black = "^20.8b1"
-tox = "^3.21.4"
-isort = "^5.7.0"
-pytest-httpserver = "^0.3.7"
-pytest-asyncio = "^0.14.0"
-pytest-spec = "^3.1.0"
-pytest-cov = "^2.11.1"
-Faker = "^6.1.1"
+
+[tool.poetry.group.dev.dependencies]
+
+black = "^24.3.0"
+tox = "^4.14.2"
+isort = "^5.13.2"
+Faker = "^24.4.0"
+pytest-httpserver = "^1.0.10"
+pytest-asyncio = "^0.23.6"
+pytest-spec = "^3.2.0"
+pytest-cov = "^5.0.0"
+pytest = "^8.1.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -44,9 +43,13 @@ ensure_newline_before_comments = true
 line_length = 100
 profile = "black"
 
+[tool.pytest.ini_options]
+testpaths = "tests"
+
+
 [tool.black]
 line-length = 100
-target-version = ['py38']  # todo py39
+target-version = ['py38'] # todo py39
 include = '\.pyi?$'
 exclude = '''
 

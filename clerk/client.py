@@ -1,10 +1,11 @@
 import http
+from collections.abc import Mapping
 from contextlib import asynccontextmanager
-from typing import Any, Mapping, Optional
+from typing import Any
 
 import aiohttp
 
-from clerk.errors import ClerkAPIException
+from .errors import ClerkAPIException
 
 __all__ = ["Client", "Service"]
 
@@ -13,7 +14,10 @@ class Client:
     """An API client for the clerk.dev API"""
 
     def __init__(
-        self, token: str, base_url: str = "https://api.clerk.dev/v1/", timeout_seconds: float = 30.0
+        self,
+        token: str,
+        base_url: str = "https://api.clerk.dev/v1/",
+        timeout_seconds: float = 30.0,
     ) -> None:
         self._session = aiohttp.ClientSession(
             headers={"Authorization": f"Bearer {token}"},
@@ -29,55 +33,53 @@ class Client:
 
     @property
     def verification(self):
-        from clerk.verification import VerificationService
+        from .verification import VerificationService
 
         return VerificationService(self)
 
     @property
     def session(self):
-        from clerk.sessions import SessionsService
+        from .sessions import SessionsService
 
         return SessionsService(self)
 
     @property
     def clients(self):
-        from clerk.clients import ClientsService
+        from .clients import ClientsService
 
         return ClientsService(self)
 
     @property
     def users(self):
-        from clerk.users import UsersService
+        from .users import UsersService
 
         return UsersService(self)
 
     @asynccontextmanager
-    async def get(
-        self, endpoint: str, params: Optional[Mapping[str, str]] = None
-    ) -> aiohttp.ClientResponse:
+    async def get(self, endpoint: str, params: Mapping[str, str] | None = None):
         async with self._session.get(self._make_url(endpoint), params=params) as r:
             await self._check_response_err(r)
             yield r
 
     @asynccontextmanager
-    async def post(
-        self, endpoint: str, data: Any = None, json: Any = None
-    ) -> aiohttp.ClientResponse:
-        async with self._session.post(self._make_url(endpoint), data=data, json=json) as r:
+    async def post(self, endpoint: str, data: Any = None, json: Any = None):
+        async with self._session.post(
+            self._make_url(endpoint), data=data, json=json
+        ) as r:
             await self._check_response_err(r)
             yield r
 
     @asynccontextmanager
-    async def delete(self, endpoint: str) -> aiohttp.ClientResponse:
+    async def delete(self, endpoint: str):
         async with self._session.delete(self._make_url(endpoint)) as r:
             await self._check_response_err(r)
             yield r
 
     @asynccontextmanager
-    async def patch(
-        self, endpoint: str, data: Any = None, json: Any = None
-    ) -> aiohttp.ClientResponse:
-        async with self._session.patch(self._make_url(endpoint), data=data, json=json) as r:
+    async def patch(self, endpoint: str, data: Any = None, json: Any = None):
+        async with self._session.patch(
+            self._make_url(endpoint), data=data, json=json
+        ) as r:
             await self._check_response_err(r)
             yield r
 

@@ -1,3 +1,3 @@
-from .client import Client
+from .client import Client, Service
 
-__version__ = "0.1.0"
+__all__ = ["Client", "Service"]

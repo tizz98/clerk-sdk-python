@@ -1,4 +1,4 @@
-from typing import Any, List, Optional
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -17,9 +17,9 @@ class Session(BaseModel):
 class Client(BaseModel):
     object: str
     id: str
-    last_active_session_id: Optional[str] = None
-    sign_in_attempt_id: Optional[str] = None
-    sign_up_attempt_id: Optional[str] = None
+    last_active_session_id: str | None = None
+    sign_in_attempt_id: str | None = None
+    sign_up_attempt_id: str | None = None
     ended: bool = False
 
 
@@ -39,7 +39,7 @@ class PhoneNumber(BaseModel):
     phone_number: str
     reserved_for_second_factor: bool
     verification: Verification
-    linked_to: List[IdentificationLink]
+    linked_to: list[IdentificationLink]
 
 
 class EmailAddress(BaseModel):
@@ -47,26 +47,27 @@ class EmailAddress(BaseModel):
     id: str
     email_address: str
     verification: Verification
-    linked_to: List[IdentificationLink]
+    linked_to: list[IdentificationLink]
 
 
 class User(BaseModel):
     object: str
     id: str
-    username: Optional[str] = None
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    gender: Optional[str] = None
-    birthday: Optional[str] = None
+    username: str | None = None
+    first_name: str | None = None
+    last_name: str | None = None
+    gender: str | None = None
+    birthday: str | None = None
     profile_image_url: str
-    primary_email_address_id: Optional[str] = None
-    primary_phone_number_id: Optional[str] = None
+    primary_email_address_id: str | None = None
+    primary_phone_number_id: str | None = None
     password_enabled: bool
     two_factor_enabled: bool
-    email_addresses: List[EmailAddress]
-    phone_numbers: List[PhoneNumber]
-    external_accounts: List[Any]
-    metadata: Any
+    email_addresses: list[EmailAddress]
+    phone_numbers: list[PhoneNumber]
+    external_accounts: list[Any]
+    public_metadata: Any
+    unsafe_metadata: Any
     private_metadata: Any
     created_at: int
     updated_at: int
@@ -76,7 +77,7 @@ class Error(BaseModel):
     message: str
     long_message: str
     code: str
-    meta: Optional[Any] = None
+    meta: Any | None = None
 
 
 class VerifyRequest(BaseModel):
@@ -90,9 +91,9 @@ class DeleteUserResponse(BaseModel):
 
 
 class UpdateUserRequest(BaseModel):
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    primary_email_address_id: Optional[str] = None
-    primary_phone_number_id: Optional[str] = None
-    profile_image: Optional[str] = None
-    password: Optional[str] = None
+    first_name: str | None = None
+    last_name: str | None = None
+    primary_email_address_id: str | None = None
+    primary_phone_number_id: str | None = None
+    profile_image: str | None = None
+    password: str | None = None
